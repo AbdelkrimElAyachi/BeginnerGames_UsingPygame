@@ -1,62 +1,30 @@
-from typing import Any
-import pygame
+from Bird import *
+import random
 
-
-def initialize():
-    (numsucces,numfails) = pygame.init()
-    if(numfails>0):
-        print(f"there are {numfails} that didn't get loaded")
-
-
-class Bird(pygame.sprite.Sprite):
-    # Constructor. Pass in the color of the block,
-    # and its x and y position
-    def __init__(self, x , y):
-       
-       # Call the parent class (Sprite) constructor
-       pygame.sprite.Sprite.__init__(self) 
-
-       self.images = []
-       self.index = 0
-       self.counter = 0
-       for i in range(3):
-           self.images.append(pygame.image.load(f"assets/bird{i+1}.png"))
-
-
-       self.image = self.images[self.index]
-       self.rect = self.image.get_rect()
-       self.rect.center = [x,y]
-
-    def update(self):
-
-        self.counter += 1
-
-        if(self.counter > 20):
-            self.counter = 0
-            self.index+=1
-        
-            if(self.index >= len(self.images)):
-                self.index = 0
-        
-        self.image = self.images[self.index]
-        
-
-
+# loading pygame modules
 initialize()
-
-
-clock = pygame.time.Clock()
+# declaring the principale variables in our game  
+pipe_speed = 4
 fps = 60
+screen_wd = 864
+screen_h = 936
+last_pipe = pygame.time.get_ticks()
+note = 0
+hole = 100
 
-# images
+
+# setting up frames
+clock = pygame.time.Clock()
+
+# loading images for background and the ground
 bg = pygame.image.load("assets/bg.png")
 ground = pygame.image.load("assets/ground.png")
 
 
-
-surface = pygame.display.set_mode((864,936),pygame.RESIZABLE)
+# setting up the window 
+surface = pygame.display.set_mode((screen_wd,screen_h),pygame.NOFRAME)
 pygame.display.set_caption("flappy bird")
-Icon = pygame.image.load("logo2.png")
+Icon = pygame.image.load("assets/logo2.png")
 pygame.display.set_icon(Icon)
 
 
@@ -67,36 +35,62 @@ scroll_speed = 4
 
 
 
-# 
-b_group = pygame.sprite.Group()
+# initializing sprites for the bird and the pipes  
+pipe_group , bird_group= pygame.sprite.Group(),pygame.sprite.Group() 
 flappy = Bird(100,int(936/2))
-b_group.add(flappy)
+bird_group.add(flappy)
+pipe_group.add(Pipe(random.randint(300,600),random.randint(220,550),True,pipe_speed))
 
 running = True
 while running:
 
-    # frames pe defautl fps = 60
+
+    # frames pe defautl fps = 60 
     clock.tick(fps)
-
-
-
+ 
     #  adding background
     surface.blit(bg,(0,0)) 
+
+    # check for collision
+    if pygame.sprite.groupcollide(bird_group,pipe_group,False,False):
+        flappy.gameOver = True 
+
+    # pipes
+    pipe_group.draw(surface)
+    pipe_group.update()
+
+    if not flappy.gameOver:
+        if (pygame.time.get_ticks() - last_pipe ) > 1500 :
+            num = random.randint(100,500)
+            pipe_group.add(Pipe(900,num-hole ,True,pipe_speed))
+            pipe_group.add(Pipe(900,num+hole ,False,pipe_speed))
+            last_pipe = pygame.time.get_ticks() 
+            note += 1
+            hole -= 0.5
+            print(note)
+
+    # adding ground
     surface.blit(ground,(ground_scroll,768))
     ground_scroll -= scroll_speed
 
     # plyaer
-    b_group.draw(surface)
-    b_group.update()
+    bird_group.draw(surface)
+    bird_group.update()
 
     if (ground_scroll<-35):
         ground_scroll = 0
+
+    if flappy.gameOver :
+        print("you lose")  
+        running = False      
 
     for event in pygame.event.get():
 
         if(event.type == pygame.QUIT):
             running = False
+
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                flappy.jump()
        
-
-
     pygame.display.flip()
