@@ -22,7 +22,7 @@ class Bird(pygame.sprite.Sprite):
        self.counter = 0
 
        for i in range(3):
-           self.images.append(pygame.image.load(f"assets/bird{i+1}.png"))
+           self.images.append(pygame.image.load(f"./assets/bird{i+1}.png"))
 
        self.image = self.images[self.index]
        self.rect = self.image.get_rect()
@@ -37,7 +37,7 @@ class Bird(pygame.sprite.Sprite):
 
     def handle_graphity(self):        
         # in case you lose the game
-        if (self.rect.y > 738):
+        if (self.rect.y > 718):
             self.gameOver = True
         else:    
             #  graphity
@@ -71,7 +71,7 @@ class Pipe(pygame.sprite.Sprite):
     def __init__(self,x,y,rotate,speed):
         pygame.sprite.Sprite.__init__(self)
         self.speed = speed
-        self.image = pygame.image.load("assets/pipe.png")
+        self.image = pygame.image.load("./assets/pipe.png")
         self.rect = self.image.get_rect()
         if(rotate):
             self.image = pygame.transform.flip(self.image,False,True)
@@ -88,7 +88,7 @@ class Pipe(pygame.sprite.Sprite):
 
 class Button():
     def __init__(self,x,y) -> None:
-            self.image = pygame.image.load("assets/restart.png")
+            self.image = pygame.image.load("./assets/restart.png")
             self.rect = self.image.get_rect()
             self.rect.center = [x,y]
 

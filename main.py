@@ -2,13 +2,6 @@ from Bird import *
 import random
 
 
-def resetGame():
-    pipe_group.empty()
-    flappy.rect.x = 100
-    flappy.rect.y = int(screen_h/2)
-    flappy.gameOver = False
-    flappy.vel = 0
-    note = 0
 
 # loading pygame modules
 initialize()
@@ -21,19 +14,26 @@ last_pipe = pygame.time.get_ticks()
 note = 0
 hole = 100
 
+def resetGame():
+    pipe_group.empty()
+    flappy.rect.x = 100
+    flappy.rect.y = int(screen_h/2)
+    flappy.gameOver = False
+    flappy.vel = 0
+    return 0
 
 # setting up frames
 clock = pygame.time.Clock()
 
 # loading images for background and the ground
-bg = pygame.image.load("assets/bg.png")
-ground = pygame.image.load("assets/ground.png")
+bg = pygame.image.load("./assets/bg.png")
+ground = pygame.image.load("./assets/ground.png")
 
 
 # setting up the window 
 surface = pygame.display.set_mode((screen_wd,screen_h),pygame.RESIZABLE)
 pygame.display.set_caption("flappy bird")
-Icon = pygame.image.load("assets/logo2.png")
+Icon = pygame.image.load("./assets/logo2.png")
 pygame.display.set_icon(Icon)
 
 
@@ -97,8 +97,9 @@ while running:
 
     if flappy.gameOver :
         if btn.draw(surface):
-            resetGame()
-            print("clicked")
+            note = resetGame()
+            print("-------------------------------------------------------- new start -------------------------------------------------")
+            
 
 
     for event in pygame.event.get():
