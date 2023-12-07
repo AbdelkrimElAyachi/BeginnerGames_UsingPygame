@@ -1,12 +1,21 @@
 from Bird import *
 import random
 
+
+def resetGame():
+    pipe_group.empty()
+    flappy.rect.x = 100
+    flappy.rect.y = int(screen_h/2)
+    flappy.gameOver = False
+    flappy.vel = 0
+    note = 0
+
 # loading pygame modules
 initialize()
 # declaring the principale variables in our game  
 pipe_speed = 4
 fps = 60
-screen_wd = 864
+screen_wd = 864 #864
 screen_h = 936
 last_pipe = pygame.time.get_ticks()
 note = 0
@@ -22,7 +31,7 @@ ground = pygame.image.load("assets/ground.png")
 
 
 # setting up the window 
-surface = pygame.display.set_mode((screen_wd,screen_h),pygame.NOFRAME)
+surface = pygame.display.set_mode((screen_wd,screen_h),pygame.RESIZABLE)
 pygame.display.set_caption("flappy bird")
 Icon = pygame.image.load("assets/logo2.png")
 pygame.display.set_icon(Icon)
@@ -41,6 +50,9 @@ flappy = Bird(100,int(936/2))
 bird_group.add(flappy)
 pipe_group.add(Pipe(random.randint(300,600),random.randint(220,550),True,pipe_speed))
 
+# create my restart button
+btn  = Button(screen_wd//2,screen_h//2)
+
 running = True
 while running:
 
@@ -54,12 +66,15 @@ while running:
     # check for collision
     if pygame.sprite.groupcollide(bird_group,pipe_group,False,False):
         flappy.gameOver = True 
-
-    # pipes
+    # drawing pipes 
     pipe_group.draw(surface)
-    pipe_group.update()
 
     if not flappy.gameOver:
+        
+        # update pipes and the bird
+        pipe_group.update()
+
+        # creating pipes
         if (pygame.time.get_ticks() - last_pipe ) > 1500 :
             num = random.randint(100,500)
             pipe_group.add(Pipe(900,num-hole ,True,pipe_speed))
@@ -69,9 +84,9 @@ while running:
             hole -= 0.5
             print(note)
 
-    # adding ground
-    surface.blit(ground,(ground_scroll,768))
-    ground_scroll -= scroll_speed
+        # animation ground
+        surface.blit(ground,(ground_scroll,768))
+        ground_scroll -= scroll_speed
 
     # plyaer
     bird_group.draw(surface)
@@ -81,16 +96,21 @@ while running:
         ground_scroll = 0
 
     if flappy.gameOver :
-        print("you lose")  
-        running = False      
+        if btn.draw(surface):
+            resetGame()
+            print("clicked")
+
 
     for event in pygame.event.get():
 
         if(event.type == pygame.QUIT):
             running = False
 
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE:
+        if event.type == pygame.KEYDOWN :
+            if event.key == pygame.K_SPACE and not flappy.gameOver:
                 flappy.jump()
        
     pygame.display.flip()
+
+
+
