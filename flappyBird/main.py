@@ -1,6 +1,15 @@
+# importing the libraries used
 from Bird import *
 import random
 
+# differents functions 
+def resetGame():
+    pipe_group.empty()
+    flappy.rect.x = 100
+    flappy.rect.y = int(screen_h/2)
+    flappy.gameOver = False
+    flappy.vel = 0
+    return 0
 
 
 # loading pygame modules
@@ -14,16 +23,6 @@ last_pipe = pygame.time.get_ticks()
 note = 0
 hole = 100
 
-def resetGame():
-    pipe_group.empty()
-    flappy.rect.x = 100
-    flappy.rect.y = int(screen_h/2)
-    flappy.gameOver = False
-    flappy.vel = 0
-    return 0
-
-# setting up frames
-clock = pygame.time.Clock()
 
 # loading images for background and the ground
 bg = pygame.image.load("./assets/bg.png")
@@ -35,6 +34,7 @@ surface = pygame.display.set_mode((screen_wd,screen_h),pygame.RESIZABLE)
 pygame.display.set_caption("flappy bird")
 Icon = pygame.image.load("./assets/logo2.png")
 pygame.display.set_icon(Icon)
+clock = pygame.time.Clock()
 
 
 
@@ -42,10 +42,13 @@ pygame.display.set_icon(Icon)
 ground_scroll = 0
 scroll_speed = 4
 
+# text
+font = pygame.font.SysFont(None, 64)
+
 
 
 # initializing sprites for the bird and the pipes  
-pipe_group , bird_group= pygame.sprite.Group(),pygame.sprite.Group() 
+pipe_group , bird_group = pygame.sprite.Group(),pygame.sprite.Group() 
 flappy = Bird(100,int(936/2))
 bird_group.add(flappy)
 pipe_group.add(Pipe(random.randint(300,600),random.randint(220,550),True,pipe_speed))
@@ -53,9 +56,9 @@ pipe_group.add(Pipe(random.randint(300,600),random.randint(220,550),True,pipe_sp
 # create my restart button
 btn  = Button(screen_wd//2,screen_h//2)
 
+
 running = True
 while running:
-
 
     # frames pe defautl fps = 60 
     clock.tick(fps)
@@ -63,16 +66,20 @@ while running:
     #  adding background
     surface.blit(bg,(0,0)) 
 
+
     # check for collision
     if pygame.sprite.groupcollide(bird_group,pipe_group,False,False):
         flappy.gameOver = True 
+
     # drawing pipes 
     pipe_group.draw(surface)
+    # animation ground
+    surface.blit(ground,(ground_scroll,768))
 
     if not flappy.gameOver:
-        
         # update pipes and the bird
         pipe_group.update()
+        
 
         # creating pipes
         if (pygame.time.get_ticks() - last_pipe ) > 1500 :
@@ -84,8 +91,7 @@ while running:
             hole -= 0.5
             print(note)
 
-        # animation ground
-        surface.blit(ground,(ground_scroll,768))
+        # ground update 
         ground_scroll -= scroll_speed
 
     # plyaer
@@ -100,7 +106,9 @@ while running:
             note = resetGame()
             print("-------------------------------------------------------- new start -------------------------------------------------")
             
-
+    # font text
+    img = font.render(str(note), True,(255,255,255))
+    surface.blit(img, (screen_wd//2,100 ))
 
     for event in pygame.event.get():
 
