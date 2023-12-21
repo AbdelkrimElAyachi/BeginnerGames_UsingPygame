@@ -2,7 +2,7 @@
 from Bird import *
 import random
 
-# differents functions 
+# differents functions
 def resetGame():
     pipe_group.empty()
     flappy.rect.x = 100
@@ -14,7 +14,7 @@ def resetGame():
 
 # loading pygame modules
 initialize()
-# declaring the principale variables in our game  
+# declaring the principale variables in our game
 pipe_speed = 4
 fps = 60
 screen_wd = 864 #864
@@ -29,7 +29,7 @@ bg = pygame.image.load("./assets/bg.png")
 ground = pygame.image.load("./assets/ground.png")
 
 
-# setting up the window 
+# setting up the window
 surface = pygame.display.set_mode((screen_wd,screen_h),pygame.RESIZABLE)
 pygame.display.set_caption("flappy bird")
 Icon = pygame.image.load("./assets/logo2.png")
@@ -47,8 +47,8 @@ font = pygame.font.SysFont(None, 64)
 
 
 
-# initializing sprites for the bird and the pipes  
-pipe_group , bird_group = pygame.sprite.Group(),pygame.sprite.Group() 
+# initializing sprites for the bird and the pipes
+pipe_group , bird_group = pygame.sprite.Group(),pygame.sprite.Group()
 flappy = Bird(100,int(936/2))
 bird_group.add(flappy)
 pipe_group.add(Pipe(random.randint(300,600),random.randint(220,550),True,pipe_speed))
@@ -60,18 +60,18 @@ btn  = Button(screen_wd//2,screen_h//2)
 running = True
 while running:
 
-    # frames pe defautl fps = 60 
+    # frames pe defautl fps = 60
     clock.tick(fps)
  
     #  adding background
-    surface.blit(bg,(0,0)) 
+    surface.blit(bg,(0,0))
 
 
     # check for collision
     if pygame.sprite.groupcollide(bird_group,pipe_group,False,False):
-        flappy.gameOver = True 
+        flappy.gameOver = True
 
-    # drawing pipes 
+    # drawing pipes
     pipe_group.draw(surface)
     # animation ground
     surface.blit(ground,(ground_scroll,768))
@@ -86,12 +86,12 @@ while running:
             num = random.randint(100,500)
             pipe_group.add(Pipe(900,num-hole ,True,pipe_speed))
             pipe_group.add(Pipe(900,num+hole ,False,pipe_speed))
-            last_pipe = pygame.time.get_ticks() 
+            last_pipe = pygame.time.get_ticks()
             note += 1
             hole -= 0.5
             print(note)
 
-        # ground update 
+        # ground update
         ground_scroll -= scroll_speed
 
     # plyaer
@@ -105,7 +105,7 @@ while running:
         if btn.draw(surface):
             note = resetGame()
             print("-------------------------------------------------------- new start -------------------------------------------------")
-            
+
     # font text
     img = font.render(str(note), True,(255,255,255))
     surface.blit(img, (screen_wd//2,100 ))
@@ -118,7 +118,7 @@ while running:
         if event.type == pygame.KEYDOWN :
             if event.key == pygame.K_SPACE and not flappy.gameOver:
                 flappy.jump()
-       
+
     pygame.display.flip()
 
 
