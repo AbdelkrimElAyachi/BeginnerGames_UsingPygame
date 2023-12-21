@@ -1,9 +1,9 @@
 # importing the libraries used
 try:
-    from Bird import *
+    from Bird import Bird,Button,Pipe,pygame,initialize
     import random
 except ImportError:
-    exit("modules not found")     
+    exit("modules not found")
 
 # Check if Bird class is defined
 if "Bird" not in globals() or not callable(Bird):
@@ -18,7 +18,7 @@ if "initialize" not in dir() or not callable(initialize):
     exit("Error: initialize() function is not defined. Please ensure it is properly defined.")
 
 # Check if initialize() function is defined
-if "Button" not in dir() or not callable(Button):
+if "Button" not in globals() or not callable(Button):
     exit("Error: Button class is not defined. Please ensure it is properly defined.")
 
 # differents functions
@@ -28,6 +28,7 @@ def resetGame():
     flappy.rect.y = int(screen_h/2)
     flappy.gameOver = False
     flappy.vel = 0
+    hole = 100
     return 0
 
 

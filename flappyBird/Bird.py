@@ -57,7 +57,7 @@ class Bird(pygame.sprite.Sprite):
 
         # rotate the bird
         self.image = pygame.transform.rotate(self.images[self.index], self.vel * -3)
-        
+
 
     def jump(self):
         self.vel = -10
