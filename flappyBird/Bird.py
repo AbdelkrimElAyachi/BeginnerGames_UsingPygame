@@ -13,20 +13,20 @@ class Bird(pygame.sprite.Sprite):
 
 
     def __init__(self, x , y):
-       # Call the parent class (Sprite) constructor
-       pygame.sprite.Sprite.__init__(self) 
-       self.gameOver = False
-       self.vel = 0
-       self.images = []
-       self.index = 0
-       self.counter = 0
+        # Call the parent class (Sprite) constructor
+        pygame.sprite.Sprite.__init__(self)
+        self.gameOver = False
+        self.vel = 0
+        self.images = []
+        self.index = 0
+        self.counter = 0
 
-       for i in range(3):
+        for i in range(3):
            self.images.append(pygame.image.load(f"./assets/bird{i+1}.png"))
 
-       self.image = self.images[self.index]
-       self.rect = self.image.get_rect()
-       self.rect.center = [x,y]
+        self.image = self.images[self.index]
+        self.rect = self.image.get_rect()
+        self.rect.center = [x,y]
 
     def update(self):
         if (self.rect.top < 0):
@@ -52,9 +52,9 @@ class Bird(pygame.sprite.Sprite):
         if (self.counter > 20):
             self.counter = 0
             self.index+=1
-            if(self.index >= len(self.images)):
+            if (self.index >= len(self.images)):
                 self.index = 0
-        
+
         # rotate the bird
         self.image = pygame.transform.rotate(self.images[self.index], self.vel * -3)
         

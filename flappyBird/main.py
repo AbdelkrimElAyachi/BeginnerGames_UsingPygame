@@ -1,6 +1,25 @@
 # importing the libraries used
-from Bird import *
-import random
+try:
+    from Bird import *
+    import random
+except ImportError:
+    exit("modules not found")     
+
+# Check if Bird class is defined
+if "Bird" not in globals() or not callable(Bird):
+    exit("Error: Bird class is not defined. Please ensure it is properly defined.")
+
+# Check if Pipe class is defined
+if "Pipe" not in globals() or not callable(Pipe):
+    exit("Error: Pipe class is not defined. Please ensure it is properly defined.")
+
+# Check if initialize() function is defined
+if "initialize" not in dir() or not callable(initialize):
+    exit("Error: initialize() function is not defined. Please ensure it is properly defined.")
+
+# Check if initialize() function is defined
+if "Button" not in dir() or not callable(Button):
+    exit("Error: Button class is not defined. Please ensure it is properly defined.")
 
 # differents functions
 def resetGame():
@@ -84,8 +103,11 @@ while running:
         # creating pipes
         if (pygame.time.get_ticks() - last_pipe ) > 1500 :
             num = random.randint(100,500)
-            pipe_group.add(Pipe(900,num-hole ,True,pipe_speed))
-            pipe_group.add(Pipe(900,num+hole ,False,pipe_speed))
+            try:
+                pipe_group.add(Pipe(900,num-hole ,True,pipe_speed))
+                pipe_group.add(Pipe(900,num+hole ,False,pipe_speed))
+            except NameError:
+                raise Exception("please ensure that pipe is properly defined")    
             last_pipe = pygame.time.get_ticks()
             note += 1
             hole -= 0.5
